@@ -22,7 +22,23 @@ public class Q60 {
         queue.offer(pRoot);
 
         while (!queue.isEmpty()) {
+            int size = queue.size();
+            ArrayList<Integer> list = new ArrayList<>();
 
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node == null) {
+                    continue;
+                }
+
+                list.add(node.val);
+
+                queue.offer(node.left);
+                queue.offer(node.right);
+            }
+            if (list.size() > 0) {
+                result.add(list);
+            }
         }
         return result;
     }
