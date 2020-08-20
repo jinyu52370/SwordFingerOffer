@@ -18,18 +18,55 @@ package com.jinyu;
  * 7
  */
 public class Q35 {
-    public int InversePairs(int[] array) {
-        int p = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (i + 1 == array.length) {
-                break;
-            }
-            if (array[i] > array[i + 1]) {
-                p++;
-            }
-        }
+    private int[] array;
+    private int[] temp;
 
-        return p % 1_000_000_000 == 0 ? 7 : p;
+    public int InversePairs(int[] array) {
+        if (array == null) {
+            return 0;
+        }
+        this.array = array;
+        this.temp = new int[array.length];
+        return mergeSort(0, array.length - 1);
+    }
+
+    //归并排序，递归
+    private int mergeSort(int left, int right) {
+        if (left >= right) {
+            return 0;
+        }
+        int p = 0, mid = left + (right - left) / 2;
+        p += mergeSort(left, mid);
+        p %= 1000000007;
+        p += mergeSort(mid + 1, right);
+        p %= 1000000007;
+        p += merge(left, mid, right);
+        p %= 1000000007;
+        return p;
+    }
+
+    //归并排序，合并
+    private int merge(int left, int mid, int right) {
+        int i = left, p1 = left, p2 = mid + 1, p = 0;
+        while (p1 <= mid && p2 <= right) {
+            if (array[p1] > array[p2]) {
+                p += mid - p1 + 1;
+                p %= 1000000007;
+                temp[i++] = array[p2++];
+            } else
+                temp[i++] = array[p1++];
+        }
+        while (p1 <= mid) {
+            temp[i++] = array[p1++];
+        }
+        while (p2 <= right) {
+            temp[i++] = array[p2++];
+        }
+        //排序
+        for (i = left; i <= right; i++) {
+            array[i] = temp[i];
+        }
+        return p;
     }
 
     public static void main(String[] args) {
